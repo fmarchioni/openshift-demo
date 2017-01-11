@@ -1,7 +1,7 @@
-openshift-jee-sample
+openshift-wf-cluster
 ====================
 
-A sample app to be deployed on openshift environments
+A sample distributable web application to be deployed on a cluster
 
-Note: to build this repository with maven you must specify "-Popenshift", eg "mvn clean package -Popenshift"
+ 
 
