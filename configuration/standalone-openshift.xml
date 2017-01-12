@@ -1,7 +1,6 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" ?>
 
 <server xmlns="urn:jboss:domain:4.1">
-
     <extensions>
         <extension module="org.jboss.as.clustering.infinispan"/>
         <extension module="org.jboss.as.clustering.jgroups"/>
@@ -33,8 +32,6 @@
         <extension module="org.wildfly.extension.security.manager"/>
         <extension module="org.wildfly.extension.undertow"/>
     </extensions>
-
-
     <management>
         <security-realms>
             <security-realm name="ManagementRealm">
@@ -55,22 +52,7 @@
                     <properties path="application-roles.properties" relative-to="jboss.server.config.dir"/>
                 </authorization>
             </security-realm>
-            <security-realm name="LDAPRealm">
-                <server-identities>
-                    <ssl>
-                        <keystore path="server.keystore" relative-to="jboss.server.config.dir" keystore-password="mypassword" alias="eap7book" key-password="mypassword"/>
-                    </ssl>
-                </server-identities>
-                <authentication>
-                    <ldap connection="ldap_connection" base-dn="ou=Users,dc=jboss,dc=org">
-                        <username-filter attribute="uid"/>
-                    </ldap>
-                </authentication>
-            </security-realm>
         </security-realms>
-        <outbound-connections>
-            <ldap name="ldap_connection" url="ldap://127.0.0.1:10389" search-dn="uid=hnelson,ou=Users,dc=jboss,dc=org" search-credential="secret"/>
-        </outbound-connections>
         <audit-log>
             <formatters>
                 <json-formatter name="json-formatter"/>
@@ -86,25 +68,19 @@
         </audit-log>
         <management-interfaces>
             <http-interface security-realm="ManagementRealm" http-upgrade-enabled="true">
-                <socket-binding http="management-http" https="management-https"/>
+                <socket-binding http="management-http"/>
             </http-interface>
         </management-interfaces>
-        <access-control provider="rbac">
+        <access-control provider="simple">
             <role-mapping>
                 <role name="SuperUser">
                     <include>
                         <user name="$local"/>
                     </include>
                 </role>
-                <role name="Maintainer">
-                    <include>
-                        <group alias="Senior" name="Senior"/>
-                    </include>
-                </role>
             </role-mapping>
         </access-control>
     </management>
-
     <profile>
         <subsystem xmlns="urn:jboss:domain:logging:3.0">
             <console-handler name="CONSOLE">
@@ -204,6 +180,7 @@
             </session-bean>
             <pools>
                 <bean-instance-pools>
+                    <!-- Automatically configure pools. Alternatively, max-pool-size can be set to a specific value -->
                     <strict-max-pool name="slsb-strict-max-pool" derive-size="from-worker-pools" instance-acquisition-timeout="5" instance-acquisition-timeout-unit="MINUTES"/>
                     <strict-max-pool name="mdb-strict-max-pool" derive-size="from-cpu-count" instance-acquisition-timeout="5" instance-acquisition-timeout-unit="MINUTES"/>
                 </bean-instance-pools>
@@ -345,7 +322,7 @@
             </mail-session>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:modcluster:2.0">
-            <mod-cluster-config advertise-socket="modcluster" advertise="false" connector="ajp">
+            <mod-cluster-config advertise-socket="modcluster" connector="ajp">
                 <dynamic-load-provider>
                     <load-metric type="cpu"/>
                 </dynamic-load-provider>
@@ -425,7 +402,6 @@
                     <location name="/" handler="welcome-content"/>
                     <filter-ref name="server-header"/>
                     <filter-ref name="x-powered-by-header"/>
-                    <filter-ref name="modcluster"/>
                 </host>
             </server>
             <servlet-container name="default">
@@ -438,7 +414,6 @@
             <filters>
                 <response-header name="server-header" header-name="Server" header-value="JBoss-EAP/7"/>
                 <response-header name="x-powered-by-header" header-name="X-Powered-By" header-value="Undertow/1"/>
-                <mod-cluster name="modcluster" advertise-socket-binding="modcluster" management-socket-binding="http"/>
             </filters>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:webservices:2.0">
@@ -453,7 +428,6 @@
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:weld:3.0"/>
     </profile>
-
     <interfaces>
         <interface name="management">
             <inet-address value="${jboss.bind.address.management:127.0.0.1}"/>
@@ -465,7 +439,6 @@
             <inet-address value="${jboss.bind.address.private:127.0.0.1}"/>
         </interface>
     </interfaces>
-
     <socket-binding-group name="standard-sockets" default-interface="public" port-offset="${jboss.socket.binding.port-offset:0}">
         <socket-binding name="management-http" interface="management" port="${jboss.management.http.port:9990}"/>
         <socket-binding name="management-https" interface="management" port="${jboss.management.https.port:9993}"/>
