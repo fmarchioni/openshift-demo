@@ -2,6 +2,7 @@
 
 <server xmlns="urn:jboss:domain:4.0">
     <extensions>
+ 
         <extension module="org.jboss.as.clustering.infinispan"/>
         <extension module="org.jboss.as.clustering.jgroups"/>
         <extension module="org.jboss.as.connector"/>
@@ -276,35 +277,37 @@
                 <channel name="ee" stack="udp"/>
             </channels>
             <stacks>
-                <stack name="udp">
-                    <transport type="UDP" socket-binding="jgroups-udp"/>
-                    <protocol type="PING"/>
-                    <protocol type="MERGE3"/>
-                    <protocol type="FD_SOCK" socket-binding="jgroups-udp-fd"/>
-                    <protocol type="FD_ALL"/>
-                    <protocol type="VERIFY_SUSPECT"/>
-                    <protocol type="pbcast.NAKACK2"/>
-                    <protocol type="UNICAST3"/>
-                    <protocol type="pbcast.STABLE"/>
-                    <protocol type="pbcast.GMS"/>
-                    <protocol type="UFC"/>
-                    <protocol type="MFC"/>
-                    <protocol type="FRAG2"/>
-                </stack>
-                <stack name="tcp">
-                    <transport type="TCP" socket-binding="jgroups-tcp"/>
-                    <protocol type="MPING" socket-binding="jgroups-mping"/>
-                    <protocol type="MERGE3"/>
-                    <protocol type="FD_SOCK" socket-binding="jgroups-tcp-fd"/>
-                    <protocol type="FD"/>
-                    <protocol type="VERIFY_SUSPECT"/>
-                    <protocol type="pbcast.NAKACK2"/>
-                    <protocol type="UNICAST3"/>
-                    <protocol type="pbcast.STABLE"/>
-                    <protocol type="pbcast.GMS"/>
-                    <protocol type="MFC"/>
-                    <protocol type="FRAG2"/>
-                </stack>
+             <stack name="udp">
+                <transport type="UDP" socket-binding="jgroups-udp"/>
+                <protocol type="openshift.KUBE_PING"/>
+                <protocol type="MERGE3"/>
+                <protocol type="FD_SOCK" socket-binding="jgroups-udp-fd"/>
+                <protocol type="FD_ALL"/>
+                <protocol type="VERIFY_SUSPECT"/>
+                <protocol type="pbcast.NAKACK2"/>
+                <protocol type="UNICAST3"/>
+                <protocol type="pbcast.STABLE"/>
+                <protocol type="pbcast.GMS"/>
+                <protocol type="UFC"/>
+                <protocol type="MFC"/>
+                <protocol type="FRAG2"/>
+                <protocol type="RSVP"/>
+            </stack>
+            <stack name="tcp">
+                <transport type="TCP" socket-binding="jgroups-tcp"/>
+                <protocol type="openshift.KUBE_PING"/>
+                <protocol type="MERGE2"/>
+                <protocol type="FD_SOCK" socket-binding="jgroups-tcp-fd"/>
+                <protocol type="FD"/>
+                <protocol type="VERIFY_SUSPECT"/>
+                <protocol type="pbcast.NAKACK2"/>
+                <protocol type="UNICAST3"/>
+                <protocol type="pbcast.STABLE"/>
+                <protocol type="pbcast.GMS"/>
+                <protocol type="MFC"/>
+                <protocol type="FRAG2"/>
+                <protocol type="RSVP"/>
+            </stack>
             </stacks>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:jmx:1.3">
