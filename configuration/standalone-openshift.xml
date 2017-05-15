@@ -296,18 +296,20 @@
                 </stack>
                 <stack name="tcp">
                     <transport type="TCP" socket-binding="jgroups-tcp"/>
-                     <protocol type="openshift.KUBE_PING"/>
-                    <protocol type="MERGE3"/>
+                    <protocol type="openshift.KUBE_PING" socket-binding="jgroups-mping"/>
+                    <protocol type="MERGE2"/>
                     <protocol type="FD_SOCK" socket-binding="jgroups-tcp-fd"/>
                     <protocol type="FD"/>
                     <protocol type="VERIFY_SUSPECT"/>
                     <protocol type="pbcast.NAKACK2"/>
                     <protocol type="UNICAST3"/>
                     <protocol type="pbcast.STABLE"/>
+                    <!-- ##JGROUPS_AUTH## -->
+                    <!-- ##JGROUPS_ENCRYPT## -->
                     <protocol type="pbcast.GMS"/>
                     <protocol type="MFC"/>
                     <protocol type="FRAG2"/>
-                </stack>
+</stack>
             </stacks>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:jmx:1.3">
